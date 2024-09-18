@@ -2,7 +2,7 @@
 id: 3
 title: "Consistent Hashing"
 subtitle: "Consistent Hashing"
-date: "2024.12.06"
+date: "12.06.2024"
 tags: "Consistent Hashing"
 ---
 

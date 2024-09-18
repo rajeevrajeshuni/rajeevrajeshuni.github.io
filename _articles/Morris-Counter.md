@@ -2,7 +2,7 @@
 id: 1
 title: "Introduction to Morris Counter"
 subtitle: "Introduction to Morris Counter"
-date: "2024.14.08"
+date: "14.08.2024"
 tags: "Morris Counter"
 ---
 

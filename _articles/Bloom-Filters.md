@@ -2,7 +2,7 @@
 id: 0
 title: "Introduction to Bloom Filters"
 subtitle: "Introduction to Bloom Filters"
-date: "2024.08.12"
+date: "08.12.2024"
 tags: "Bloom Filters"
 ---
 

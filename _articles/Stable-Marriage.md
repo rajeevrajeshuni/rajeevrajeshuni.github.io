@@ -2,7 +2,7 @@
 id: 2
 title: "Stable Marriage Problem"
 subtitle: "Stable Marriage Problem"
-date: "2024.12.07"
+date: "12.07.2024"
 tags: "Stable Marriage"
 ---
 
