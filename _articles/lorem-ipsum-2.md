@@ -1,56 +1,62 @@
 ---
 id: 2
-title: "Lorem ipsum 2"
-subtitle: "Sed sit amet arcu a diam tincidunt porta"
-date: "2019.12.08"
+title: "Stable Marriage Problem"
+subtitle: "Stable Marriage Problem"
+date: "2024.12.07"
 tags: "tag1, tag2"
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet arcu a diam tincidunt porta. Fusce ut elit euismod massa convallis volutpat vitae et magna.
+# Stable Marriage Problem
 
-> Aliquam porttitor libero sit amet odio iaculis, eu sollicitudin eros venenatis. Maecenas posuere tortor vitae diam egestas, eget pretium ligula aliquam.
+The stable marriage problem deals with optimal matching of a list of men and women, so that all marriages are stable.
 
-Pellentesque eu erat vitae metus dignissim tempus. Duis malesuada magna eu risus fermentum consectetur. Sed in ante consequat urna ultricies dapibus ac non diam.[^1]
+To give an example, let us say we have a list of men [m₁, m₂, ..., mₙ] and women [w₁, w₂, ..., wₙ] and each man has a list of preferences for the women they want to marry and each woman also has a list of preferences for the men they want to marry.
 
-![dummy image](/images/800x600.png)
+A marriage is considered unstable when two people of opposite genders prefer each other over their current partner. So if we match two couples (mₓ, wₓ) and (mᵧ, wᵧ), the marriage is considered unstable when mₓ prefers wᵧ over wₓ and wᵧ also prefers mₓ over mᵧ.
 
-Suspendisse porttitor pellentesque ante, dapibus ullamcorper risus commodo eu. Duis sapien mi, mollis vel odio nec, iaculis pharetra nunc. Aliquam quam nisi, cursus `pharetra` feugiat nec, tristique quis libero. Ut blandit sit amet lacus eget elementum. Fusce elit nisi, feugiat ornare commodo at, varius sed augue.
+The stable marriage problem is solved by the Gale-Shapley algorithm which gives stable allocation to any list of men and women of the same length.
 
-* Morbi in est sem.
-* Nulla commodo eu justo in sollicitudin.
-* Suspendisse pretium consectetur est.
+## Algorithm:
 
-Quisque imperdiet massa `dolor`, sed facilisis $`4 - (log{_2} 2 + 1) = 2`$ mi posuere ac. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed feugiat gravida ipsum id pharetra. Proin tortor lectus, tempor sed sapien et, molestie ullamcorper urna. `Curabitur` et lacinia nulla. Sed ornare vel orci egestas mattis. Praesent luctus elementum mollis. Vestibulum molestie lectus a orci lacinia volutpat.
+1. Each man or woman can be in a **free** or **engaged** state. Initially all men and women will be considered **free**.
 
-```rust
-fn main() {
-  println!("hello, world!");
-}
-```
+2. Each man and woman has a list of preferred partners of the opposite gender. Each person's preference list contains the list of all the people of opposite gender in the order of preference.
 
-Integer quis magna urna. Nam diam nisl, molestie non arcu at, sagittis consequat lacus. Nam dapibus pellentesque aliquam. Nam vitae nisl elementum est auctor mollis in sed dolor. Aliquam eget metus eget libero malesuada scelerisque sit amet ut nulla. Vivamus tristique convallis est id rutrum. Donec auctor massa vulputate turpis sodales, sit amet ullamcorper dolor posuere. Nam at mauris finibus, eleifend quam nec, ultrices nibh.
+3. In each round each **free** man proposes the most preferred women whom he has not previously proposed to irrespective of the state of the women. In each round, each man proposes only one woman.
 
-```math
--b \pm \sqrt{b^2 - 4ac} \over 2a
-```
+4. If a woman is **free**, she picks the most preferred man from the list of prospects and both the man and woman are now considered **engaged**.
 
-Vestibulum turpis ligula, imperdiet eu molestie vitae, viverra sit amet est. Vivamus commodo augue ac venenatis consequat. Aliquam dignissim, lorem sed hendrerit convallis, massa ligula porttitor diam, auctor fringilla sapien ligula quis lectus.[^2] Sed a consectetur purus. Vivamus cursus velit vehicula tortor condimentum, vitae condimentum est sagittis. Etiam efficitur, sem sit amet tincidunt ultrices, augue ipsum maximus justo, non dignissim nunc nulla sit amet ante. Donec vitae venenatis nisl.
+5. If a woman is **engaged**, then the woman can break the engagement if she receives a proposal from a man whom she prefers more than her current partner. In this case the man is going back to being **free**.
 
-# Vivamus accumsan a turpis in ullamcorper.
+6. The cycle continues until all of them are **engaged**.
+   a. Once the cycle ends, all **engaged** couples are considered married.
 
-Proin mattis urna faucibus gravida sodales. Suspendisse in nisl vitae lacus tincidunt suscipit a vitae lectus. Ut finibus interdum sagittis. Vestibulum at ligula sed justo tristique accumsan.
+## Correctness of the algorithm:
 
-## Nulla at velit sit amet velit tempus vestibulum.
+Let us try to prove this algorithm by negation. Let us assume the algorithm gives us two couples (mₓ, wₓ) and (mᵧ, wᵧ) where mₓ prefers wᵧ over wₓ and wᵧ prefers mₓ over mᵧ. So both marriages are unstable.
 
-Nulla porttitor quam bibendum nisi consectetur, ut suscipit mauris fringilla. enean mi sapien, vestibulum sed velit tincidunt, sollicitudin fringilla augue. Donec a ultrices risus.
+Since all men propose in the order of their preference, mₓ would've proposed to wᵧ before wₓ. Given that mₓ is married to wₓ the only way this is possible is that wᵧ has rejected mₓ's proposal.
 
-### Cras luctus nunc erat, nec dapibus mi commodo vel.
+Since wᵧ has rejected the mₓ proposal, this means that:
 
-Nam eleifend lorem nisi, id venenatis mauris ultricies quis. Duis finibus nulla lacus, at sodales purus eleifend et. Curabitur viverra, massa sit amet lacinia sodales, enim odio condimentum metus, eu aliquam nisl sem eu sem. Cras placerat sed ipsum sed tincidunt.
+1. wᵧ was already engaged to another man mz who wᵧ prefers more than mₓ.
 
-# Phasellus auctor vehicula auctor.
+2. Since wᵧ married mᵧ this means that either mz is the same as mᵧ or wᵧ prefers mᵧ more than mz.
 
-Nulla hendrerit purus aliquam sem malesuada sodales. Nulla ultrices, arcu in mollis consectetur, mauris justo faucibus tortor, ac pretium leo lectus id libero. Suspendisse blandit rhoncus viverra. Curabitur mattis, lacus ac iaculis hendrerit, mauris sapien ullamcorper nulla, sit amet laoreet urna elit in dolor. Nulla fermentum porttitor tortor, eget sagittis elit mollis nec.
+3. In both of these cases, wᵧ prefers mᵧ more than mₓ. So the initial scenario is not even possible if we follow the algorithm.
 
-[^1]: Vestibulum turpis ligula, imperdiet eu molestie vitae, viverra sit amet est.
-[^2]: Phasellus auctor vehicula auctor.
+## Time and Space Complexity:
+
+Since each man proposes to each woman only once, each man can propose to maximum n women. So the maximum number of proposals will be O(n²). So the worst case time complexity is O(n²), assuming in each round the women decide on the proposals in constant time.
+
+For space complexity, we have to save preferences for men and women, which is O(n²) and the saving of engagements will take O(n) space. So space complexity is also O(n²).
+
+## Use cases:
+
+1. Akamai CDN uses a generalized version of the Gale-Shapley algorithm to match clients to their edge servers. Check out this link.
+
+2. The algorithm was also used to match students to schools, medical interns to hospitals, and match organ donors to patients.
+
+## Notes:
+
+Lloyd Shapley and Alvin E. Roth won the Nobel Prize in Economics for their work on stable allocations.
