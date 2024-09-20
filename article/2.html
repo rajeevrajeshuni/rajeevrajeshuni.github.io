@@ -1,0 +1,126 @@
+<!doctypehtml>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stable Marriage Problem</title>
+
+  <meta name="viewport"content="width=device-width,initial-scale=1">
+  <meta http-equiv="X-UA-Compatible"content="ie=edge">
+
+  <link rel="shortcut icon"href="../assets/favicon.ico"type="image/x-icon">
+  <link rel="preload"href="../styles/article.css"as="style">
+  <link rel="stylesheet"href="../styles/article.css">
+</head>
+<body>
+  <header id="top-container"role="navigation">
+    <nav>
+  <a class="logo-link"href="/">
+    <h1>Rajeev Rajeshuni</h1>
+    <span>Software Engineer</span>
+  </a>
+  <small>
+    
+    
+    <a id="articles"class="info-link"href="/articles.html">📚Articles</a>
+  </small>
+</nav>
+
+  </header>
+  <main id="main-container">
+    <article id="article-container">
+      <h1 id="article-title">
+        Stable Marriage Problem
+      </h1>
+      
+        <h2 id="article-subtitle">
+          Stable Marriage Problem
+        </h2>
+      
+      <time id="article-date">
+        12.07.2024
+      </time>
+      <section id="article-content-container">
+        <details><summary>Table of Contents</summary>
+<p><div class="table-of-contents"><ul><li><a href="#stable-marriage-problem">Stable Marriage Problem</a><ul><li><a href="#algorithm%3A">Algorithm:</a><li><a href="#correctness-of-the-algorithm%3A">Correctness of the algorithm:</a><li><a href="#time-and-space-complexity%3A">Time and Space Complexity:</a><li><a href="#use-cases%3A">Use cases:</a><li><a href="#notes%3A">Notes:</a></ul></ul></div><p></p>
+</details>
+<h1 id="stable-marriage-problem"tabindex="-1">Stable Marriage Problem</h1>
+<p>The stable marriage problem deals with optimal matching of a list of men and women, so that all marriages are stable.</p>
+<p>To give an example, let us say we have a list of men [m₁, m₂, …, mₙ] and women [w₁, w₂, …, wₙ] and each man has a list of preferences for the women they want to marry and each woman also has a list of preferences for the men they want to marry.</p>
+<p>A marriage is considered unstable when two people of opposite genders prefer each other over their current partner. So if we match two couples (mₓ, wₓ) and (mᵧ, wᵧ), the marriage is considered unstable when mₓ prefers wᵧ over wₓ and wᵧ also prefers mₓ over mᵧ.</p>
+<p>The stable marriage problem is solved by the Gale-Shapley algorithm which gives stable allocation to any list of men and women of the same length.</p>
+<h2 id="algorithm%3A"tabindex="-1">Algorithm:</h2>
+<ol>
+<li>
+<p>Each man or woman can be in a <strong>free</strong> or <strong>engaged</strong> state. Initially all men and women will be considered <strong>free</strong>.</p>
+</li>
+<li>
+<p>Each man and woman has a list of preferred partners of the opposite gender. Each person’s preference list contains the list of all the people of opposite gender in the order of preference.</p>
+</li>
+<li>
+<p>In each round each <strong>free</strong> man proposes the most preferred women whom he has not previously proposed to irrespective of the state of the women. In each round, each man proposes only one woman.</p>
+</li>
+<li>
+<p>If a woman is <strong>free</strong>, she picks the most preferred man from the list of prospects and both the man and woman are now considered <strong>engaged</strong>.</p>
+</li>
+<li>
+<p>If a woman is <strong>engaged</strong>, then the woman can break the engagement if she receives a proposal from a man whom she prefers more than her current partner. In this case the man is going back to being <strong>free</strong>.</p>
+</li>
+<li>
+<p>The cycle continues until all of them are <strong>engaged</strong>.
+a. Once the cycle ends, all <strong>engaged</strong> couples are considered married.</p>
+</li>
+</ol>
+<h2 id="correctness-of-the-algorithm%3A"tabindex="-1">Correctness of the algorithm:</h2>
+<p>Let us try to prove this algorithm by negation. Let us assume the algorithm gives us two couples (mₓ, wₓ) and (mᵧ, wᵧ) where mₓ prefers wᵧ over wₓ and wᵧ prefers mₓ over mᵧ. So both marriages are unstable.</p>
+<p>Since all men propose in the order of their preference, mₓ would’ve proposed to wᵧ before wₓ. Given that mₓ is married to wₓ the only way this is possible is that wᵧ has rejected mₓ’s proposal.</p>
+<p>Since wᵧ has rejected the mₓ proposal, this means that:</p>
+<ol>
+<li>
+<p>wᵧ was already engaged to another man mz who wᵧ prefers more than mₓ.</p>
+</li>
+<li>
+<p>Since wᵧ married mᵧ this means that either mz is the same as mᵧ or wᵧ prefers mᵧ more than mz.</p>
+</li>
+<li>
+<p>In both of these cases, wᵧ prefers mᵧ more than mₓ. So the initial scenario is not even possible if we follow the algorithm.</p>
+</li>
+</ol>
+<h2 id="time-and-space-complexity%3A"tabindex="-1">Time and Space Complexity:</h2>
+<p>Since each man proposes to each woman only once, each man can propose to maximum n women. So the maximum number of proposals will be O(n²). So the worst case time complexity is O(n²), assuming in each round the women decide on the proposals in constant time.</p>
+<p>For space complexity, we have to save preferences for men and women, which is O(n²) and the saving of engagements will take O(n) space. So space complexity is also O(n²).</p>
+<h2 id="use-cases%3A"tabindex="-1">Use cases:</h2>
+<ol>
+<li>
+<p>Akamai CDN uses a generalized version of the Gale-Shapley algorithm to match clients to their edge servers. Check out this link.</p>
+</li>
+<li>
+<p>The algorithm was also used to match students to schools, medical interns to hospitals, and match organ donors to patients.</p>
+</li>
+</ol>
+<h2 id="notes%3A"tabindex="-1">Notes:</h2>
+<p>Lloyd Shapley and Alvin E. Roth won the Nobel Prize in Economics for their work on stable allocations.</p>
+
+      </section>
+      <section id="article-navigation">
+        
+        
+          <div class="article-navigation-item article-navigation-prev">
+            <a href="/article/1.html">
+              <div class="article-navigation-arrow article-navigation-prev">＞</div>
+              <div class="article-navigation-content article-navigation-prev">
+                <p class="article-navigation-title">Introduction to Morris Counter</p>
+                <p class="article-navigation-subtitle">Introduction to Morris Counter</p>
+              </div>
+            </a>
+          </div>
+        
+      </section>
+      <section id="article-list-button-container">
+        <a href="/articles.html">
+          <div id="article-list-button">📚</div>
+        </a>
+      </section>
+    </article>
+  </main>
+
+

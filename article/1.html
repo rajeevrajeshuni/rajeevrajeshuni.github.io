@@ -1,0 +1,105 @@
+<!doctypehtml>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Introduction to Morris Counter</title>
+
+  <meta name="viewport"content="width=device-width,initial-scale=1">
+  <meta http-equiv="X-UA-Compatible"content="ie=edge">
+
+  <link rel="shortcut icon"href="../assets/favicon.ico"type="image/x-icon">
+  <link rel="preload"href="../styles/article.css"as="style">
+  <link rel="stylesheet"href="../styles/article.css">
+</head>
+<body>
+  <header id="top-container"role="navigation">
+    <nav>
+  <a class="logo-link"href="/">
+    <h1>Rajeev Rajeshuni</h1>
+    <span>Software Engineer</span>
+  </a>
+  <small>
+    
+    
+    <a id="articles"class="info-link"href="/articles.html">📚Articles</a>
+  </small>
+</nav>
+
+  </header>
+  <main id="main-container">
+    <article id="article-container">
+      <h1 id="article-title">
+        Introduction to Morris Counter
+      </h1>
+      
+        <h2 id="article-subtitle">
+          Introduction to Morris Counter
+        </h2>
+      
+      <time id="article-date">
+        14.08.2024
+      </time>
+      <section id="article-content-container">
+        <details><summary>Table of Contents</summary>
+<p><div class="table-of-contents"><ul><li><a href="#introduction-to-morris-counter">Introduction to Morris Counter</a><ul><li><a href="#use-cases">Use Cases</a></ul></ul></div><p></p>
+</details>
+<h1 id="introduction-to-morris-counter"tabindex="-1">Introduction to Morris Counter</h1>
+<p>Morris counter is a probabilistic algorithm for approximate counting of a large number of events using a small amount of memory.</p>
+<p>Let us say the actual number of events that happened is <code>n</code>. If we are using exact counting, to count <code>n</code> events, we will require <code>log n</code> bits, however the Morris counter does it with <code>log(log n)</code> bits.</p>
+<p>The core idea is that we store a number <code>v</code>, which we will use to give an estimated value for the total number of events. Let us call the estimated number <code>m</code>.</p>
+<p>The Morris counter formula to calculate v:</p>
+<pre class="hljs"><code>v = log₂(n + 1)
+</code></pre>
+<p>Extending the above formula we can find the estimated value:</p>
+<pre class="hljs"><code>m = 2ᵛ - 1
+</code></pre>
+<p>The challenge with the above equation is that we are not storing <code>n</code>. So we have to find another way to find the value of <code>v</code> without having value <code>n</code>. We use probability to solve this problem and calculate the value of <code>v</code>.</p>
+<p>If we increment the value <code>v</code>, then the value of <code>m</code> will be:</p>
+<pre class="hljs"><code>m₁ = 2^(v+1) - 1
+</code></pre>
+<p>So we need to increment the variable <code>v</code> only once for <code>m₁ - m</code> events. So every time an event occurs we increment the value of v by probably <code>1/(m₁ - m)</code>. In this case, <code>v</code> should approximately converge to the function <code>ln(n+1)</code>.</p>
+<p>Note that the probability of incrementing variable <code>v</code> depends on its current value.</p>
+<h2 id="use-cases"tabindex="-1">Use Cases</h2>
+<ol>
+<li>
+<p><strong>Network Traffic Analysis</strong>: Morris counters are useful for estimating network traffic, especially when there are a large number of packets or connections.</p>
+</li>
+<li>
+<p><strong>Distributed Systems</strong>: Maintaining event counts across many nodes in distributed systems can be prohibitively memory-intensive. Morris counters can reduce this cost by providing a probabilistic count.</p>
+</li>
+</ol>
+
+      </section>
+      <section id="article-navigation">
+        
+          <div class="article-navigation-item article-navigation-next">
+            <a href="/article/2.html">
+              <div class="article-navigation-arrow article-navigation-next">＜</div>
+              <div class="article-navigation-content article-navigation-next">
+                <p class="article-navigation-title">Stable Marriage Problem</p>
+                <p class="article-navigation-subtitle">Stable Marriage Problem</p>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="article-navigation-item article-navigation-prev">
+            <a href="/article/3.html">
+              <div class="article-navigation-arrow article-navigation-prev">＞</div>
+              <div class="article-navigation-content article-navigation-prev">
+                <p class="article-navigation-title">Consistent Hashing</p>
+                <p class="article-navigation-subtitle">Consistent Hashing</p>
+              </div>
+            </a>
+          </div>
+        
+      </section>
+      <section id="article-list-button-container">
+        <a href="/articles.html">
+          <div id="article-list-button">📚</div>
+        </a>
+      </section>
+    </article>
+  </main>
+
+

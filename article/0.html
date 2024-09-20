@@ -1,0 +1,250 @@
+<!doctypehtml>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Introduction to Bloom Filters</title>
+
+  <meta name="viewport"content="width=device-width,initial-scale=1">
+  <meta http-equiv="X-UA-Compatible"content="ie=edge">
+
+  <link rel="shortcut icon"href="../assets/favicon.ico"type="image/x-icon">
+  <link rel="preload"href="../styles/article.css"as="style">
+  <link rel="stylesheet"href="../styles/article.css">
+</head>
+<body>
+  <header id="top-container"role="navigation">
+    <nav>
+  <a class="logo-link"href="/">
+    <h1>Rajeev Rajeshuni</h1>
+    <span>Software Engineer</span>
+  </a>
+  <small>
+    
+    
+    <a id="articles"class="info-link"href="/articles.html">📚Articles</a>
+  </small>
+</nav>
+
+  </header>
+  <main id="main-container">
+    <article id="article-container">
+      <h1 id="article-title">
+        Introduction to Bloom Filters
+      </h1>
+      
+        <h2 id="article-subtitle">
+          Introduction to Bloom Filters
+        </h2>
+      
+      <time id="article-date">
+        08.12.2024
+      </time>
+      <section id="article-content-container">
+        <details><summary>Table of Contents</summary>
+<p><div class="table-of-contents"><ul><li><a href="#introduction-to-bloom-filters">Introduction to Bloom Filters</a><ul><li><a href="#operation-on-the-bloom-filter%3A">Operation on the bloom filter:</a><ul><li><a href="#steps-for-adding-an-element%3A">Steps for adding an element:</a><li><a href="#steps-for-looking-up-an-element%3A">Steps for looking up an element:</a><li><a href="#steps-for-deleting-an-element%3A">Steps for deleting an element:</a></ul><li><a href="#example%3A">Example:</a><li><a href="#advantages-of-a-bloom-filter-over-a-set-data-structure%3A">Advantages of a bloom filter over a set data structure:</a><li><a href="#choosing-a-hash-function%3A">Choosing a hash function:</a><li><a href="#tuning-a-bloom-filter%3A">Tuning a bloom filter:</a><li><a href="#example-use-cases%3A">Example use cases:</a></ul></ul></div><p></p>
+</details>
+<h1 id="introduction-to-bloom-filters"tabindex="-1">Introduction to Bloom Filters</h1>
+<p>Bloom filter is a probabilistic data structure used to solve the set membership problem. A relaxed constraint here is that false positives are tolerated to an acceptable level.</p>
+<p>Bloom filter uses a bit array to store the presence of items. Bloom filter uses hash functions to save the presence of an item without saving the actual item.</p>
+<p>Bloom filters can give false positives, but never false negatives. This means that if the bloom filter returns positive, it means that the element may be present in the set, but if it returns negative, it means that the element is definitely not present in the set.</p>
+<p>Now let us define a few variables before jumping into the algorithm:</p>
+<ol>
+<li><code>n</code> - The number of elements to be added in to the set.</li>
+<li><code>k</code> - The number of hash functions we use.</li>
+<li><code>m</code> - The length of the bit array we will use.</li>
+</ol>
+<p>Let us assume we have <code>n</code> elements to insert into the set. Before inserting elements, let us create a bit array of size <code>m</code> with all values set to <code>0</code>, and <code>k</code> hash functions which return values in the range of <code>(0,m-1)</code>.</p>
+<h2 id="operation-on-the-bloom-filter%3A"tabindex="-1">Operation on the bloom filter:</h2>
+<h3 id="steps-for-adding-an-element%3A"tabindex="-1">Steps for adding an element:</h3>
+<p>For each element we run <code>k</code> hash functions and then use the result as the index in the bit array. We mark the element at that index as <code>1</code>. We will also store the elements in secondary storage for bookkeeping.</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">addElement</span><span class="hljs-params">(item SetItem)</span></span> {
+    <span class="hljs-comment">// Iterate over the array of hash functions</span>
+    <span class="hljs-keyword">for</span> _, hashFunction := <span class="hljs-keyword">range</span> hashFunctions {
+        v := hashFunction(item)
+        bitarray[v] = <span class="hljs-number">1</span>
+    }
+    <span class="hljs-comment">// Here you&#x27;d save the item to secondary storage.</span>
+}
+</code></pre>
+<h3 id="steps-for-looking-up-an-element%3A"tabindex="-1">Steps for looking up an element:</h3>
+<p>Similar to above, we run <code>k</code> hash functions on an element and use the result as an index in the bit array. We check the value in each of those indexes and if the value is <code>1</code> in all of them, the bloom filter returns true.</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">lookUpElement</span><span class="hljs-params">(item SetItem)</span></span> <span class="hljs-type">bool</span> {
+    <span class="hljs-comment">// Iterating over the array of hash functions</span>
+    <span class="hljs-keyword">for</span> _, hashFunction := <span class="hljs-keyword">range</span> hashFunctions {
+        v := hashFunction(item)
+        <span class="hljs-keyword">if</span> bitarray[v] == <span class="hljs-number">0</span> {
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>
+        }
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>
+}
+</code></pre>
+<p>The bits at those indexes could be made <code>1</code> by different elements resulting in a false positive, but that is a tradeoff with bloom filter.</p>
+<h3 id="steps-for-deleting-an-element%3A"tabindex="-1">Steps for deleting an element:</h3>
+<p>You cannot delete an element from the bloom filter. This is a significant drawback, but that is the tradeoff for reducing space utilization.</p>
+<h2 id="example%3A"tabindex="-1">Example:</h2>
+<p>We choose three hash functions and a bit array of size <code>16</code> with all bits as <code>0</code>. Let us add elements <code>A</code> and <code>B</code>.</p>
+<p>Flow for adding the elements:</p>
+<p>We take the element and get the has value from the three functions and mark the corresponding bits as <code>1</code> in the bit array.</p>
+<p>Let the hash values for <code>A</code> be 7, 1 and 14. So the array will change to:</p>
+<table>
+<thead>
+<tr>
+<th>Values</th>
+<th>0</th>
+<th>1</th>
+<th>0</th>
+<th>0</th>
+<th>0</th>
+<th>0</th>
+<th>0</th>
+<th>1</th>
+<th>0</th>
+<th>0</th>
+<th>0</th>
+<th>0</th>
+<th>0</th>
+<th>0</th>
+<th>1</th>
+<th>0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Index</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+<td>10</td>
+<td>11</td>
+<td>12</td>
+<td>13</td>
+<td>14</td>
+<td>15</td>
+</tr>
+</tbody>
+</table>
+<p>Let the hash values for <code>B</code> be 8, 1 and 15. So the array will change to:</p>
+<table>
+<thead>
+<tr>
+<th>Values</th>
+<th>0</th>
+<th>1</th>
+<th>0</th>
+<th>0</th>
+<th>0</th>
+<th>0</th>
+<th>0</th>
+<th>1</th>
+<th>1</th>
+<th>0</th>
+<th>0</th>
+<th>0</th>
+<th>0</th>
+<th>0</th>
+<th>1</th>
+<th>1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Index</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+<td>10</td>
+<td>11</td>
+<td>12</td>
+<td>13</td>
+<td>14</td>
+<td>15</td>
+</tr>
+</tbody>
+</table>
+<p>Flow for looking up an item:</p>
+<p>Let’s say we are searching for the element <code>C</code>, whose hash values are 1,15 and 9. The values in the bit array at index 1,15 are 1, but the value at index 9 is 0. So we can safely say that the <code>C</code> is not part of the set.</p>
+<blockquote>
+<p>💡 When hashing, why do we usually take array lengths in powers of 2?</p>
+<p>This is because, usually we do a mod of the size of the array to find the index. If the array size is a power of 2, then taking a mod is simply a bitwise operation. Let’s say the number is 254 which is 11111110. 254%16 will be the last 4 bits which is 1110 which is 14.</p>
+</blockquote>
+<h2 id="advantages-of-a-bloom-filter-over-a-set-data-structure%3A"tabindex="-1">Advantages of a bloom filter over a set data structure:</h2>
+<ol>
+<li>
+<p>Optimized space usage:
+a. Usually a set data structure is maintained using a self-balancing binary tree, hash table, array, linked list or trie.
+b. These data structures require storing at least the elements themselves (except for trie). The items could be a small integer or a large string.
+c. In contrast, the bloom filter takes the same amount of space for an item of any length.</p>
+</li>
+<li>
+<p>Constant insertion and lookup time:
+a. Bloom filters also have the advantage that the time taken to add an item does not depend on the existing elements already added. It is a constant value O(k). The same is the case for lookup time.</p>
+</li>
+<li>
+<p>There is also the advantage of parallelizing the execution of hash functions.</p>
+</li>
+</ol>
+<h2 id="choosing-a-hash-function%3A"tabindex="-1">Choosing a hash function:</h2>
+<ol>
+<li>
+<p>Let us detail our requirements for the hash function
+a. Fast computation
+b. Uniform distribution
+c. Cryptographic security to avoid reverse engineering is not a concern here.</p>
+</li>
+<li>
+<p>In line with the above requirements, bloom filters typically use the hash functions MurmurHash, JenkinsHash, and FNV Hash.</p>
+</li>
+</ol>
+<h2 id="tuning-a-bloom-filter%3A"tabindex="-1">Tuning a bloom filter:</h2>
+<p>We can intuitively see that if we keep adding elements to a bloom filter, the collisions increase and hence the false positive rate also increases.</p>
+<p>In the worst case, the bloom filter returns true for any given element. Since we have all the elements saved in secondary storage, we need to increase the values <code>m</code> and <code>k</code> and create another bloom filter.</p>
+<p>However how do we know the optimal values of <code>m</code> and <code>k</code>, given <code>n</code> and an error rate? The exact math is outside the scope of this blog, but you can explore <a href="https://hur.st/bloomfilter/">https://hur.st/bloomfilter/</a> to get these values.</p>
+<h2 id="example-use-cases%3A"tabindex="-1">Example use cases:</h2>
+<ol>
+<li>
+<p>Akamai uses a bloom filter to avoid caching one-hit wonders. They cache an item only when it is accessed for the second time.</p>
+</li>
+<li>
+<p>Databases such as Google Bigtable, Apache Cassandra use bloom filters to reduce disk lookups for non-existent items.</p>
+</li>
+</ol>
+
+      </section>
+      <section id="article-navigation">
+        
+          <div class="article-navigation-item article-navigation-next">
+            <a href="/article/3.html">
+              <div class="article-navigation-arrow article-navigation-next">＜</div>
+              <div class="article-navigation-content article-navigation-next">
+                <p class="article-navigation-title">Consistent Hashing</p>
+                <p class="article-navigation-subtitle">Consistent Hashing</p>
+              </div>
+            </a>
+          </div>
+        
+        
+      </section>
+      <section id="article-list-button-container">
+        <a href="/articles.html">
+          <div id="article-list-button">📚</div>
+        </a>
+      </section>
+    </article>
+  </main>
+
+
